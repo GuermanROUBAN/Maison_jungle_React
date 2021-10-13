@@ -1,3 +1,5 @@
+import '../styles/Cart.css'
+
 function Cart() {
 	const priceMonstera = 8;
 	const priceLierre = 10;
