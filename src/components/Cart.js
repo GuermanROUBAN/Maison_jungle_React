@@ -11,8 +11,12 @@ import { useState } from 'react'
 import '../styles/Cart.css'
 
 
-function Cart() {
-	const monsteraPrice = 8
+function Cart({ cart, updateCart }) {
+	const [isOpen, setIsOpen] = useState(true)
+	const total = cart.reduce(
+		(acc, plantType) => acc + plantType.amount * plantType.price,
+		0
+	)
 
 	// fonction qui permet de mettre à jour le state
 	// => Ceci est un hook (tableau => décomposition)
@@ -23,35 +27,42 @@ function Cart() {
 	// const cart = cartState[0] ==> cart est la valeur actuelle
 	// const updateCart = cartState[1] ==> fonction qui permet de le modifier 
 
-
-	const [cart, updateCart] = useState(0)
-
-	const [isOpen, setIsOpen] = useState(true)
-
-
 	return isOpen ? (
 		<div className='lmj-cart'>
 			<button
 				className='lmj-cart-toggle-button'
-				onClick={() => setIsOpen(false)}>
+				onClick={() => setIsOpen(false)}
+			>
 				Fermer
 			</button>
-			<h2>Panier</h2>
-			<div>
-				Monstera : {monsteraPrice}€
-				{/* boutton qui permet de mettre à jour le state */}
-				<button onClick={() => updateCart(cart + 1)}>Ajouter
-				</button>
-			</div>
-			<h3>Total: {monsteraPrice * cart}€</h3>
-			< button onClick={() => updateCart(0)}>Vider le panier
-				</ button>
-		</div >
-
-
+			{cart.length > 0 ? (
+				<div>
+					<h2>Panier</h2>
+					<ul>
+						{cart.map(({ name, price, amount }, index) => (
+							<div key={`${name}-${index}`}>
+								{name} {price}€ x {amount}
+							</div>
+						))}
+					</ul>
+					<h3>Total : {total}€</h3>
+					< button onClick={() => updateCart([])}>Vider le panier</ button>
+				</div>
+			) : (
+				<div>Votre panier est vide</div>
+			)}
+		</div>
 	) : (
-		<button onClick={() => setIsOpen(true)}>Ovrir le Panier</button>
+		<div className='lmj-cart-closed'>
+			<button
+				className='lmj-cart-toggle-button'
+				onClick={() => setIsOpen(true)}
+			>
+				Ovrir le Panier
+			</button >
+		</div >
 	)
 }
 
 export default Cart
+
